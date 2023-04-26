@@ -1,0 +1,55 @@
+---
+- name: Create a new virtual machine from template
+  hosts: localhost
+  gather_facts: no
+  vars:
+    vcenter_hostname: "10.190.26.45"
+    vcenter_username: "administrator@vsphere.local"
+    vcenter_password: ""
+    vm_template_name: "CentOS8_k8s_template"
+    vm_name: "k8s-ingress1"
+    vm_datastore: "flash3"
+    vm_network_name: "LAN-136"
+    datacenter: "Datacenter"
+    guest_domain: "kropalik.local"
+    vm_folder: "k8s"
+  tasks:
+    - name: Create a new virtual machine from template
+      vmware_guest:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        datacenter: "{{ datacenter }}"
+        state: poweredon
+        guest_id: centos8_64Guest
+        folder: "{{ vm_folder }}"
+        name: "{{ vm_name }}"
+        disk:
+        - size_gb: 50
+          type: thin
+          datastore: "{{ vm_datastore }}"
+        networks:
+          - name: "{{ vm_network_name }}"
+            ip: 192.168.136.120
+            netmask: 255.255.255.0
+            gateway: 192.168.136.1
+            dns_servers:
+              - 192.168.136.10
+            start_connected: yes
+        wait_for_ip_address: true
+        wait_for_ip_address_timeout: 60
+        customization:
+          existing_vm: true
+          hostname: "{{ vm_name }}"
+          domain: "{{ guest_domain }}"
+          dns_servers:
+            - 192.168.136.10
+          dns_suffix:
+            - kropalik.local
+          script_text: |
+            #!/bin/bash
+            touch /tmp/touch-from-playbook
+        template: "{{ vm_template_name }}"
+      delegate_to: localhost
+      register: deploy_vm
