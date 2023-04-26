@@ -1,0 +1,43 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: <<certificate-arn>>
+    alb.ingress.kubernetes.io/inbound-cidrs: 0.0.0.0/0
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: instance
+    kubernetes.io/ingress.class: alb
+    meta.helm.sh/release-name: datahub
+    meta.helm.sh/release-namespace: datahub
+  creationTimestamp: "2023-04-19T13:35:02Z"
+  generation: 2
+  labels:
+    app.kubernetes.io/instance: datahub
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: datahub-frontend
+    app.kubernetes.io/version: v0.10.0
+    helm.sh/chart: datahub-frontend-0.2.136
+  name: datahub-datahub-frontend
+  namespace: datahub
+  resourceVersion: "12595844"
+  uid: a14f1c34-858e-40c0-912e-f91ccccdaafa
+spec:
+  rules:
+  - host: datahub.otservice.ru
+    http:
+      paths:
+      - backend:
+          service:
+            name: datahub-datahub-frontend
+            port:
+              number: 9002
+        path: /
+        pathType: ImplementationSpecific
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.136.120
+    - ip: 192.168.136.121
+...
