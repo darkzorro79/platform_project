@@ -21,7 +21,7 @@ Kubernetes наливаю с помощью Ansible kubespray манифесто
 Схема kubernetes получается такая.
 ![alt text](https://github.com/darkzorro79/platform_project/raw/main/kuber_schema.png)
 
-##1. Ansible or Terraform deploy vm in ESXi (vCenter)
+## 1. Ansible or Terraform deploy vm in ESXi (vCenter)
 Покажу на данный момент Ansible
 c ESXi и/или vCenter работает модуль vmware_guest - проставим его перед деплоем.
 
